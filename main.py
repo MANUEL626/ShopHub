@@ -233,18 +233,24 @@ def logout():
 def user_delete():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    if session['user_id'] == session['admin_id']:
+
+    # Vérifier si l'utilisateur est un administrateur et essaie de supprimer son propre compte
+    if 'admin_id' in session and session['user_id'] == session['admin_id']:
         flash(category='error', message='You can\'t delete this account')
         return redirect(url_for('account'))
-    elif 'user_id' in session and session['user_id'] != session['admin_id']:
+
+    # Vérifier si l'utilisateur peut être supprimé
+    if session['user_id'] != session.get('admin_id'):
         user = User.query.get(session['user_id'])
         if user:
             db.session.delete(user)
             db.session.commit()
-            session.pop('user_id')
+            session.pop('user_id')  # Déconnexion de l'utilisateur
             flash(category='success', message='Account deleted successfully')
             return redirect(url_for('index'))
+
     return redirect(url_for('index'))
+
 
 
 @app.route('/remove_flash_message', methods=['POST'])
