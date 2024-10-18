@@ -1,0 +1,30 @@
+{% extends 'partiels/page.html' %}
+
+{% block content %}
+
+{% include 'partiels/_alert_message.html' %}
+
+<div class="connection">
+    <div class="title">LOGIN</div>
+
+    <form action="/login" method="post">
+        <div class="input-group">
+            <input type="text" name="username" id="username" pattern="^[^\s]+$" required>
+            <label for="username">Username</label>
+        </div>
+
+        <div class="input-group">
+            <input type="password" name="password" id="password" pattern="^[^\s]+$" required>
+            <label for="password">password</label>
+        </div>
+
+        <input class="submit-btn" type="submit" value="Login">
+
+    </form>
+    <div class="login-link">
+        <p>Haven't account?<a href="/register">Register</a></p>
+    </div>
+</div>
+
+<link rel="stylesheet" href="{{url_for('static', filename = 'js/script.js')}}">
+{% endblock %}

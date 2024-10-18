@@ -1,0 +1,56 @@
+{% extends 'partiels/page.html' %}
+
+{% block content %}
+
+{% include 'partiels/_alert_message.html' %}
+
+{% if items %}
+
+     <div class="grid">
+         {% for item in items %}
+            <div class="grid-item">
+                <div class="image-container">
+                    <a> <!--href="{{ url_for('view_item', item_id=item.id, _external=True) }}"-->
+                        <img class="item_img" src="{{ item.get_picture_url() }}" alt="{{ item.name }}">
+                    </a>
+                </div>
+                <div class="info-container">
+                    <div class="description-price">
+                        <div class="description">{{ item.subcategory }}</div>
+                        <div class="description">{{ item.name }}</div>
+                        <div class="price">{{ item.price }} XOF</div>
+                    </div>
+                    {% if user %}
+                        {% if item.id in user.favorite_items|map(attribute='item_id') %}
+                            <a href="{{ url_for('remove_from_favorites', item_id=item.id) }}">
+                                <svg class="button_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                                  <path d="M3.53 2.47a.75.75 0 0 0-1.06 1.06l18 18a.75.75 0 1 0 1.06-1.06l-18-18ZM20.25 5.507v11.561L5.853 2.671c.15-.043.306-.075.467-.094a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93ZM3.75 21V6.932l14.063 14.063L12 18.088l-7.165 3.583A.75.75 0 0 1 3.75 21Z" />
+                                </svg>
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('add_to_favorites', item_id=item.id) }}">
+                                <svg class="button_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 0 1-1.085.67L12 18.089l-7.165 3.583A.75.75 0 0 1 3.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93Z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <a href="/login">
+                            <svg class="button_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                              <path d="M3.53 2.47a.75.75 0 0 0-1.06 1.06l18 18a.75.75 0 1 0 1.06-1.06l-18-18ZM20.25 5.507v11.561L5.853 2.671c.15-.043.306-.075.467-.094a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93ZM3.75 21V6.932l14.063 14.063L12 18.088l-7.165 3.583A.75.75 0 0 1 3.75 21Z" />
+                            </svg>
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="button-container">
+                    <a href="https://wa.me/22870873497?text={{ item.name }} - {{ url_for('view_item', item_id=item.id, _external=True) }}" target="_blank"><button type="submit">Buy</button></a>
+                </div>
+            </div>
+         {% endfor %}
+    </div>
+
+{% else %}
+    <p>No article for the moment</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'partiels/page_2.html' %}
+
+{% block content %}
+
+{% include 'partiels/_alert_message.html' %}
+
+<div class="connection">
+    <div class="title">ADD ITEM</div>
+    <form action="/gty.admin/post" method="post" enctype="multipart/form-data">
+
+        <div class="input-group">
+            <input type="text" name="name" id="name" pattern="^[^\s]+$" required>
+            <label for="name">Name</label>
+        </div>
+
+        <div class="input-group">
+            <select name="category" id="category" required>
+                <option value="clothing">Clothing</option>
+                <option value="shoes">Shoes</option>
+                <option value="watches">Watches</option>
+                <option value="accessories">Accessories</option>
+                <option value="electronics">Electronics</option>
+                <option value="home_kitchen">Home & Kitchen</option>
+                <option value="beauty">Beauty & Care</option>
+                <option value="sport">Sport & Leisure</option>
+            </select>
+            <label for="category">Category</label>
+        </div>
+
+        <div class="input-group">
+            <select name="subcategory" id="subcategory" required>
+            </select>
+            <label for="subcategory">Subcategory</label>
+        </div>
+
+        <div class="input-group">
+            <input type="number" name="price" id="price" pattern="^[^\s]+$" required>
+            <label for="price">Price</label>
+        </div>
+
+        <div class="input-group">
+            <input type="file" name="picture" id="picture" accept="image/*" required>
+            <label for="picture">Picture</label>
+        </div>
+
+        <input class="submit-btn" type="submit" value="Add item">
+
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('category');
+    const subcategorySelect = document.getElementById('subcategory');
+    const pictureInput = document.getElementById('picture');
+    const picturePreview = document.createElement('img');
+    pictureInput.parentNode.appendChild(picturePreview);
+
+    const subcategories = {
+        clothing: ['Men', 'Women', 'Kids'],
+        shoes: ['Men', 'Women', 'Kids'],
+        watches: ['Analog', 'Digital', 'Smartwatches'],
+        accessories: ['Bags', 'Jewelry', 'Hats'],
+        electronics: ['Phones', 'Computers', 'TVs'],
+        home_kitchen: ['Furniture', 'Appliances', 'Decor'],
+        beauty: ['Makeup', 'Skincare', 'Haircare'],
+        sport: ['Fitness', 'Outdoor', 'Team Sports']
+    };
+
+    function updateSubcategories() {
+        const selectedCategory = categorySelect.value;
+        const options = subcategories[selectedCategory] || [];
+        subcategorySelect.innerHTML = '';
+        options.forEach(function(subcategory) {
+            const option = document.createElement('option');
+            option.value = subcategory.toLowerCase();
+            option.textContent = subcategory;
+            subcategorySelect.appendChild(option);
+        });
+    }
+
+    categorySelect.addEventListener('change', updateSubcategories);
+
+    updateSubcategories(); // Initial population
+
+    pictureInput.addEventListener('change', function() {
+        const file = pictureInput.files[0];
+        if (file) {
+            picturePreview.src = URL.createObjectURL(file);
+        } else {
+            picturePreview.src = '';
+        }
+    });
+});
+
+</script>
+
+{% endblock %}

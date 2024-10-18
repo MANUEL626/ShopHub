@@ -1,0 +1,56 @@
+{% extends 'partiels/page.html' %}
+
+{% block content %}
+
+{% include 'partiels/_alert_message.html' %}
+
+{% if items %}
+
+    <section class="section_container">
+        <div class="slider-wrapper">
+            <div class="slider">
+                {% for item in items %}
+                    <img src="{{ item.get_picture_url() }}" id="{{ item.name }}" alt="">
+                {% endfor %}
+            </div>
+            <div class="slider-nav">
+                {% for item in items %}
+                    <a href="#{{ item.name }}"></a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+        const slides = document.querySelectorAll('.slider img');
+        const totalSlides = slides.length;
+        let index = 0;
+
+        setInterval(() => {
+            index = (index + 1) % totalSlides;
+            document.querySelector('.slider').scrollTo({
+                left: slides[index].offsetLeft,
+                behavior: 'smooth'
+                });
+            }, 5000);
+        });
+    </script>
+{% endif %}
+
+<br>
+
+<div class="content">
+    <img src="{{url_for('static', filename = 'pictures/xorsee.png')}}" alt="Icon" class="responsive-image">
+    <div class="text-content">
+        <h1>XORSEE COMPLETE IT</h1>
+        <p>
+            At xorsee, we pride ourselves on providing comprehensive IT solutions to meet all your needs. <br><br>
+            Whether you're an individual needing a quick computer repair or a business looking for advanced software development solutions, we've got you covered. <br><br>
+            Our commitment to excellence and our passion for technology make us the ideal choice for all your IT needs. <br><br>
+            <a href="http://54.36.190.172:8069">Learn more</a>...
+        </p>
+    </div>
+</div>
+
+{% endblock %}

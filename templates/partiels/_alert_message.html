@@ -1,0 +1,55 @@
+<div id="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">
+            <span>{{ message }}</span>
+            <svg class="close-icon" onclick="removeFlashMessage(this, '{{ category }}', '{{ message }}')" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+</div>
+
+<script>
+    function removeFlashMessage(element, category, message) {
+        const flashMessage = element.parentElement;
+        flashMessage.classList.add('fade-out');
+        setTimeout(() => {
+            flashMessage.remove();
+        }, 500);
+
+        fetch('/remove_flash_message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ category: category, message: message })
+        });
+    }
+
+    document.querySelectorAll('.flash').forEach(flashMessage => {
+        setTimeout(() => {
+            const category = flashMessage.classList.contains('success') ? 'success' :
+                             flashMessage.classList.contains('error') ? 'error' :
+                             flashMessage.classList.contains('warning') ? 'warning' :
+                             'info';
+            const message = flashMessage.querySelector('span').textContent.trim();
+
+            flashMessage.classList.add('fade-out');
+            setTimeout(() => {
+                flashMessage.remove();
+            }, 500);
+
+            fetch('/remove_flash_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ category: category, message: message })
+            });
+        }, 10000); // 10 seconds
+    });
+</script>
